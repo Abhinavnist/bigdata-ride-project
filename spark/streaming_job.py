@@ -16,8 +16,8 @@ schema = T.StructType([
 
 # Historical baseline: avg trips per zone, hour, weekday/weekend (training period only)
 hist = spark.read.parquet("/data/processed/zone_hour")
-baseline = (hist.filter(F.col("hour_ts") < F.lit("2025-01-25").cast("timestamp_ntz"))
-                .groupBy(F.col("PULocationID").alias("zone_id"), "hour", "is_weekend")
+baseline = (hist.filter((F.col("hour_ts") < F.lit("2025-01-25").cast("timestamp_ntz")) & (F.col("is_holiday") == 0))
+                .groupBy(F.col("PULocationID").alias("zone_id"), "hour", "dow")
                 .agg(F.avg("demand").alias("hourly_baseline")))
 
 raw = (spark.readStream.format("kafka")
@@ -39,9 +39,8 @@ def write_batch(df, batch_id):
         return
     out = (df.select("zone_id", F.col("window.start").alias("window_start"), "trips", "avg_fare")
              .withColumn("hour", F.hour("window_start"))
-             .withColumn("is_weekend",
-                         F.when(F.dayofweek("window_start").isin(1, 7), 1).otherwise(0))
-             .join(F.broadcast(baseline), ["zone_id", "hour", "is_weekend"], "left")
+             .withColumn("dow", F.dayofweek("window_start"))
+             .join(F.broadcast(baseline), ["zone_id", "hour", "dow"], "left")
              .withColumn("expected", F.round(F.coalesce(F.col("hourly_baseline"), F.lit(0.0)) / 12.0, 2))
              .withColumn("live_ratio", F.round(F.col("trips") / (F.col("expected") + 1.0), 2))
              .withColumn("surge_level",

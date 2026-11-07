@@ -10,12 +10,12 @@ pred = spark.read.parquet("/data/processed/predictions_v2")
 hist = spark.read.parquet("/data/processed/zone_hour")
 
 split = F.lit("2025-01-25").cast("timestamp_ntz")
-base = (hist.filter(F.col("hour_ts") < split)
-            .groupBy("PULocationID", "hour")
+base = (hist.filter((F.col("hour_ts") < split) & (F.col("is_holiday") == 0))
+            .groupBy("PULocationID", "hour", "dow")
             .agg(F.avg("demand").alias("baseline")))
 
-out = (pred.withColumn("hour", F.hour("hour_ts"))
-           .join(base, ["PULocationID", "hour"], "left")
+out = (pred.withColumn("hour", F.hour("hour_ts")).withColumn("dow", F.dayofweek("hour_ts"))
+           .join(base, ["PULocationID", "hour", "dow"], "left")
            .withColumn("surge_ratio",
                        F.round(F.col("predicted_demand") / (F.col("baseline") + 1.0), 2))
            .fillna({"surge_ratio": 1.0})
