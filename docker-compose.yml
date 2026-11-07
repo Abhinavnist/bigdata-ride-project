@@ -1,0 +1,42 @@
+services:
+  spark:
+    image: ${SPARK_IMAGE}
+    container_name: spark
+    user: root
+    command: ["sleep", "infinity"]
+    profiles: ["batch", "stream"]
+    volumes:
+      - ./data:/data
+      - ./spark:/opt/project/spark
+    mem_limit: 5g
+
+  hive:
+    image: ${HIVE_IMAGE}
+    container_name: hive
+    profiles: ["batch"]
+    environment:
+      SERVICE_NAME: hiveserver2
+      SERVICE_OPTS: "-Xmx1g"
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+    volumes:
+      - ./data:/data
+      - ./hive:/opt/project/hive
+    mem_limit: 3g
+
+  cassandra:
+    image: ${CASSANDRA_IMAGE}
+    container_name: cassandra
+    profiles: ["stream"]
+    environment:
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 256M
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    mem_limit: 2500m
+
+volumes:
+  cassandra_data:

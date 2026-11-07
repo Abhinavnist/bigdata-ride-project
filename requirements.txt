@@ -1,0 +1,10 @@
+pandas
+pyarrow
+requests
+holidays
+scikit-learn
+matplotlib
+plotly
+streamlit
+kafka-python
+cassandra-driver
