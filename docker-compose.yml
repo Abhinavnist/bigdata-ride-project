@@ -1,6 +1,11 @@
 services:
   spark:
-    image: ${SPARK_IMAGE}
+    build:
+      context: .
+      dockerfile: docker/spark.Dockerfile
+      args:
+        SPARK_IMAGE: ${SPARK_IMAGE}
+    image: bigdata-spark:local
     container_name: spark
     user: root
     command: ["sleep", "infinity"]
