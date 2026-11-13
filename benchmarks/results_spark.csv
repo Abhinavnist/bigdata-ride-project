@@ -1,0 +1,13 @@
+size,rows,query,median_s,best_s
+1M,999231,Q1_hourly_count,0.16,0.1
+1M,999231,Q2_join_top_zones,0.18,0.15
+1M,999231,Q3_zone_hour_dow_agg,0.14,0.1
+1M,999231,Q4_point_filter,0.06,0.04
+5M,5002164,Q1_hourly_count,0.14,0.13
+5M,5002164,Q2_join_top_zones,0.24,0.24
+5M,5002164,Q3_zone_hour_dow_agg,0.22,0.2
+5M,5002164,Q4_point_filter,0.06,0.06
+20M,20405666,Q1_hourly_count,0.29,0.28
+20M,20405666,Q2_join_top_zones,1.02,0.79
+20M,20405666,Q3_zone_hour_dow_agg,0.58,0.58
+20M,20405666,Q4_point_filter,0.13,0.13

@@ -1,0 +1,13 @@
+size,query,median_s,best_s
+1M,Q1_hourly_count,0.75,0.67
+1M,Q2_join_top_zones,0.72,0.7
+1M,Q3_zone_hour_dow_agg,0.71,0.59
+1M,Q4_point_filter,0.41,0.4
+5M,Q1_hourly_count,0.99,0.97
+5M,Q2_join_top_zones,1.5,1.42
+5M,Q3_zone_hour_dow_agg,1.2,1.17
+5M,Q4_point_filter,0.78,0.65
+20M,Q1_hourly_count,2.64,2.59
+20M,Q2_join_top_zones,4.18,4.14
+20M,Q3_zone_hour_dow_agg,3.65,3.65
+20M,Q4_point_filter,1.82,1.78
